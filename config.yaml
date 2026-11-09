@@ -1,0 +1,167 @@
+# Configuração do Coach LoL. Edite à vontade; valores ausentes usam o padrão do código.
+
+api:
+  url: https://127.0.0.1:2999/liveclientdata
+  intervalo_polling_s: 1.0
+  certificado: riotgames.pem     # raiz oficial da Riot (baixado automaticamente se faltar)
+
+jogador:
+  # auto = usa a posição que o jogo informa. Em Ferramenta de Treino/personalizada
+  # a posição vem vazia; aí use TOP, JUNGLE, MIDDLE, BOTTOM ou UTILITY.
+  rota: auto
+
+voz:
+  ativada: true
+  voz: pt-BR-AntonioNeural       # ou pt-BR-FranciscaNeural, pt-BR-ThalitaMultilingualNeural
+  velocidade: "+15%"
+  volume: "+0%"
+  intervalo_minimo_s: 15         # no máximo 1 fala a cada N segundos (exceto urgentes)
+
+regras:
+  ouro_guardado: 1500            # avisa pra voltar à base acima disso
+  vida_baixa_pct: 0.30
+  vida_critica_pct: 0.15
+  mana_baixa_pct: 0.20           # avisa pouca mana na fase de rota (só campeão de mana)
+  vantagem_pressionar: 1.5       # pontuação de vantagem pra sugerir pressionar
+  vantagem_seguro: -1.5          # abaixo disso sugere jogar seguro
+  intervalo_avaliacao_lane_s: 75
+  recompensa_abates: 3           # abates seguidos sem morrer: "Você vale recompensa: não ande sozinho"
+  recompensa_ouro: 2500          # itens acima da média inimiga (depois dos 18 min): "lute junto com o time"
+  recompensa_intervalo_s: 240
+
+# Tempos de objetivos em segundos de jogo. Confira nas notas do patch se mudarem.
+objetivos:
+  dragao_primeiro_s: 300
+  dragao_respawn_s: 300
+  anciao_respawn_s: 360
+  vastilarvas_s: 480
+  arauto_s: 900
+  barao_s: 1200
+  barao_respawn_s: 360
+  avisos_s: [60, 30]             # avisar N segundos antes de nascer
+  dragoes_para_alma: 4
+  anciao_minimo_s: 0             # o Ancião não nasce antes disso
+
+# Ajustes por modo (gameMode da Live API) por cima dos tempos acima. null = não existe no modo.
+objetivos_por_modo:
+  SWIFTPLAY:                     # Escolha Rápida 2026: só 2 dragões dão a alma, Ancião aos 15:00, Barão aos 12:00
+    vastilarvas_s: null
+    arauto_s: null
+    barao_s: 720
+    dragoes_para_alma: 2
+    anciao_minimo_s: 900
+
+jev:
+  ativado: true
+  # Chave sempre em variável de ambiente (nunca neste arquivo):
+  #   OpenRouter: OPENROUTER_API_KEY (+ OPENROUTER_JEV_MODEL, ex.: typesafe/jev-1.13)
+  #   TypeSafe direto: TYPESAFE_API_KEY
+  provedor: auto             # auto | openrouter | typesafe
+  modelo: auto               # auto = OPENROUTER_JEV_MODEL / padrão do provedor; ou um id fixo
+  limiar_confianca: 0.70     # só fala se a confiança do Jev passar disso
+  intervalo_s: 20            # pergunta a cada N segundos de jogo (ou antes, em eventos importantes)
+  atraso_max_s: 6            # descarta resposta que chegou depois de N segundos de jogo
+  timeout_s: 4
+
+# Fase 3: Sonnet (Anthropic) nos momentos sem pressa. Chave em ANTHROPIC_API_KEY (direto)
+# ou OPENROUTER_API_KEY (via OpenRouter, a mesma do Jev). Nunca neste arquivo.
+sonnet:
+  ativado: true
+  provedor: auto             # auto (Anthropic se tiver chave, senão OpenRouter) | anthropic | openrouter
+  modelo: auto               # auto = claude-sonnet-5-5 (Anthropic) / anthropic/claude-sonnet-5.5 (OpenRouter)
+  esforco: low               # low responde em ~3 s; medium/high pensa mais e demora mais
+  timeout_s: 30
+  plano_matchup: true        # plano de 3 frases no começo da partida
+  item: true                 # escolhe o item entre os candidatos do cálculo (morte/base)
+  item_minimo_do_melhor: 0.75  # só candidatos com pelo menos 75% da pontuação do 1º
+  macro: true                # reavaliação do macro
+  macro_intervalo_s: 210     # a cada 3,5 min de jogo
+  espera_item_s: 12          # se o Sonnet não responder nisso, fala o item do cálculo
+  atraso_max_macro_s: 20     # descarta macro que chegou atrasado
+  morto_minimo_s: 15         # inimigo que renasce antes disso conta como vivo pro Sonnet
+  preco_por_milhao: [2.0, 10.0]   # US$ entrada/saída, só pra estimar custo se o provedor não informar
+
+# Fase 4: estatísticas de elo alto (API web da Riot, chave RIOT_API_KEY no chaves.env).
+# Baixe com baixar_estatisticas.bat; o coach usa como contexto pro Sonnet e no log.
+estatisticas:
+  plataforma: br1            # servidor das ligas (br1, na1, euw1, kr...)
+  regiao: americas           # servidor das partidas (americas, europe, asia, sea)
+  elos: [challenger, grandmaster, master]
+  partidas_max: 1000         # quantas partidas novas por rodada (chave de desenvolvimento: ~50 por 2 min)
+  partidas_por_jogador: 20
+  amostra_minima: 20         # menos partidas que isso não vira estatística
+  faixas_ouro_lane: [-1500, -500, 500, 1500]   # diferença de ouro em itens aos 10 min contra o oponente
+  faixas_ouro_time: [-4000, -1500, 1500, 4000] # diferença do time aos 15 min
+
+build:
+  ativado: true
+  janela: true             # abre uma janela com a explicação completa
+  top: 5                   # quantos itens mostrar no ranking
+  # Campeões com cura forte no kit (contam pro valor de anticura). Edite à vontade.
+  curadores: [Aatrox, Soraka, Yuumi, Vladimir, Sylas, DrMundo, Warwick, Fiddlesticks, Swain, Briar,
+              Nami, Sona, Seraphine, Illaoi, Olaf, Darius, Irelia, Fiora, Kayn, Nasus, Volibear,
+              Trundle, Maokai, RenataGlasc, Milio, Senna, Samira, Viego, BelVeth, Gwen]
+  # "Combo mata X abaixo de N% de vida": a Live API não mostra a vida dos inimigos,
+  # então o coach calcula o limite e você compara com a barra de vida na tela.
+  aviso_combo: true
+  aviso_combo_minimo: 0.30 # não fala se o combo só mata abaixo disso
+  # Meta de Mestre+: item feito por X% dos jogadores do campeão ganha até peso_meta*X na pontuação
+  # (0.3: Cicloespada no Zed, feita por 97%, ganha +29%). 0 desliga.
+  peso_meta: 0.3
+
+# Estimativa de tropas perdidas (rotas TOP/MIDDLE/BOTTOM). A API não mostra waves nem posição:
+# o máximo vem deste calendário e o creepScore só atualiza de 10 em 10 (margem ±10).
+farm:
+  ativado: true
+  primeira_wave_s: 30        # usado só se o jogo não mandar o evento MinionsSpawning
+  intervalo_wave_s: 30
+  tropas_por_wave: 6         # 3 corpo a corpo + 3 magos
+  canhao:                    # [a partir de N s, canhão a cada K waves] — confira nas notas do patch
+    - [0, 3]
+    - [900, 2]
+    - [1500, 1]
+  chegada_s: {TOP: 38, MIDDLE: 27, BOTTOM: 38}       # da saída da base até o meio da rota
+  tempo_pra_matar_s: 25      # janela em que uma wave fica disponível pra farmar
+  recall_s: 8                # canalização do recall antes da compra
+  volta_lane_s: {TOP: 40, MIDDLE: 28, BOTTOM: 40}    # da fonte de volta pra rota
+  falar_em_min: [5, 10, 14]  # minutos em que o coach fala o farm
+  falar_se_perdeu: 8         # só fala se perdeu pelo menos isso
+
+# Draft: lê a seleção de campeões no cliente do LoL (API local LCU). Só leitura, com uma exceção liberada:
+# aceitar a partida encontrada. O coach nunca entra na fila, escolhe nem bane nada. Sugere ban, pick da sua pool contra os inimigos, e runas/feitiços de elo alto.
+cliente:
+  draft: true
+  aceitar_partida: true      # aceita a partida encontrada (a ÚNICA ação no cliente); não aceita se você recusou
+  aceitar_atraso_s: 1        # espera esse tempo antes de aceitar
+  pasta: 'C:\Riot Games\League of Legends'   # onde fica o lockfile do cliente
+  intervalo_s: 2
+
+# Análise automática no fim da partida: analise_partida.txt na pasta da partida (e na janela).
+# Os números vêm da partida; o Sonnet (se ligado) só escreve o "certo / errado / prioridades".
+analise:
+  ativado: true
+  sonnet: true
+
+# Rotação: a fala de 1 minuto antes do objetivo diz o que fazer pela sua função ("empurre o mid e vá
+# pro rio de baixo"), avisos quando a torre da sua rota cai, wave lateral no meio de jogo e resumo
+# de participação em objetivos no fim.
+rotacao:
+  ativado: true
+  wave_lateral: true             # "Pegue a wave do bot antes do dragão" (14 a 30 min)
+  wave_lateral_intervalo_s: 150
+
+# Rastreio do jungler inimigo por dedução (a API não dá posição): abates/torres com o nome dele,
+# objetivos do time inimigo, item novo (= está na base) e nível 3/4 cedo (= pode gankar).
+cacador:
+  ativado: true
+  falar: true
+  intervalo_s: 40            # no máximo um aviso de "jungler visto" a cada 40 s
+  sumido_s: 75               # visto longe de você e sem notícia há N s: avisa uma vez
+  ate_min: 20                # depois disso o time anda junto e o aviso perde valor
+
+# Ajustes de farm por modo (mesmos campos de farm), ex.: SWIFTPLAY: {intervalo_wave_s: 25}
+farm_por_modo: {}
+
+log:
+  pasta: logs
+  salvar_snapshots: true

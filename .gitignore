@@ -1,0 +1,16 @@
+# Chaves de API: nunca vão pro repositório (use chaves.env.exemplo como modelo)
+chaves.env
+
+# Ambiente Python (o iniciar_coach.bat recria)
+.venv/
+__pycache__/
+*.pyc
+
+# Partidas gravadas e análises: têm Riot IDs e são grandes
+logs/
+
+# Cache do Data Dragon/CommunityDragon, áudio da voz e partidas de elo alto (baixam de novo)
+data/
+
+# Replay de exemplo (gerado por "python -m coach exemplo")
+replays/

@@ -1,0 +1,194 @@
+# Pool de campeões. Chave = id do Data Dragon (ex.: MissFortune).
+# Build NÃO fica aqui: o módulo de build calculada vai decidir pelos atributos reais.
+#
+# niveis_fortes:   níveis em que o all-in/troca forte é bom (comparado ao oponente)
+# itens_spike:     quantos itens completos marcam o power spike principal
+# allin_nivel:     a partir de que nível o all-in passa a ser forte
+# alvo:            foco principal (usado depois pelo módulo de build)
+# dicas_vantagem / dicas_desvantagem: frases curtas (até ~8 palavras) faladas às vezes.
+#   Dica que depende de feitiço: {texto: "...", requer_feitico: SummonerDot}
+#   (SummonerDot = Incendiar, SummonerFlash, SummonerTeleport, SummonerExhaust, SummonerSmite...)
+# peso_dano / peso_defesa: quanto vale +1% de dano no combo x +1% de vida efetiva no ranking de itens
+# build_exige / build_proibe / build_vida_max: classe de item aceita pro campeão
+#   atributos: ad, ap, hp, armor, mr, ah, lethality, armor_pen_pct, magic_pen, magic_pen_pct,
+#              as_pct, crit, lifesteal, omnivamp, ms, ms_pct
+#   exige = o item precisa dar pelo menos um (botas não precisam); proibe = não pode dar nenhum
+
+Zed:
+  rota: MIDDLE
+  estilo: assassino
+  alvo: carregadores_frageis
+  niveis_fortes: [3, 6]
+  allin_nivel: 6
+  itens_spike: 1
+  peso_dano: 1.0
+  peso_defesa: 0.25
+  build_exige: [ad, lethality]
+  build_proibe: [ap, crit, as_pct, magic_pen, magic_pen_pct, lifesteal]
+  build_vida_max: 300
+  dicas_vantagem:
+    - "Troque com W, E e Q juntos"
+    - "All-in com a ult"
+    - {texto: "All-in com ult e Incendiar", requer_feitico: SummonerDot}
+    - "Use a sombra pra acertar Q duplo"
+  dicas_desvantagem:
+    - "Farme com Q de longe"
+    - "Guarde a sombra pra fugir"
+    - "Espere o nível 6 pra lutar"
+
+Mel:
+  rota: MIDDLE                 # primeiro plano B quando banem o Zed (15/4/10 contra Diana em 2026-11-06)
+  estilo: mago_alcance
+  alvo: carregadores_frageis
+  niveis_fortes: [3, 6]
+  allin_nivel: 6
+  itens_spike: 1
+  peso_dano: 0.9
+  peso_defesa: 0.3
+  build_exige: [ap]
+  build_proibe: [ad, crit, as_pct, lethality, lifesteal]
+  dicas_vantagem:
+    - "Acerte seu E, a armadilha, e solte o Q"
+    - "Use seu W, a refutação, contra o projétil dele"
+    - "Com marcas no alvo, seu R finaliza de longe"
+  dicas_desvantagem:
+    - "Farme com seu Q, a rajada, de longe"
+    - "Guarde seu W, a refutação, pra se defender"
+    - "Fique atrás da wave e cutuque com o Q"
+
+Warwick:
+  rota: JUNGLE
+  estilo: lutador
+  alvo: aguentar_e_perseguir
+  niveis_fortes: [3, 6]
+  allin_nivel: 3
+  itens_spike: 1
+  peso_dano: 0.8
+  peso_defesa: 0.4
+  build_exige: [ad, as_pct, hp]
+  build_proibe: [ap, magic_pen, magic_pen_pct, lethality]
+  dicas_vantagem:
+    - "Procure gank na lane mais forte"
+    - "Invada a selva inimiga"
+    - "Use a ult pra gank de longe"
+  dicas_desvantagem:
+    - "Farme o lado oposto ao jungler"
+    - "Fique perto das suas lanes"
+    - "Faça counter gank, não invada"
+
+Garen:
+  rota: TOP
+  estilo: lutador
+  alvo: aguentar_e_executar
+  niveis_fortes: [2, 3, 6]
+  allin_nivel: 6
+  itens_spike: 1
+  peso_dano: 0.8
+  peso_defesa: 0.45
+  build_exige: [ad, hp, armor, mr]
+  build_proibe: [ap, magic_pen, magic_pen_pct]
+  dicas_vantagem:
+    - "Troque com Q e E, saia"
+    - "Ult pra executar com vida baixa"
+    - "Empurre e pegue as placas"
+  dicas_desvantagem:
+    - "Use o passivo, recupere vida"
+    - "Farme perto da torre"
+    - "Use W quando ele engajar"
+
+MissFortune:
+  rota: BOTTOM
+  estilo: atirador
+  alvo: carregadores_frageis
+  niveis_fortes: [2, 6]
+  allin_nivel: 6
+  itens_spike: 2
+  peso_dano: 1.0
+  peso_defesa: 0.2
+  build_exige: [ad, crit, lethality]
+  build_proibe: [ap, magic_pen, magic_pen_pct]
+  build_vida_max: 0
+  dicas_vantagem:
+    - "Q ricochete em minion baixo"
+    - "Pressione com o suporte no nível 2"
+    - "Guarde a ult pra luta em grupo"
+  dicas_desvantagem:
+    - "Farme com segurança, sem trocas"
+    - "Fique atrás da wave"
+    - "Espere o jungle pra lutar"
+
+Leona:
+  rota: UTILITY
+  estilo: tanque_engage
+  alvo: aguentar_e_engajar
+  niveis_fortes: [2, 6]
+  allin_nivel: 2
+  itens_spike: 1
+  peso_dano: 0.15
+  peso_defesa: 1.0
+  build_exige: [hp, armor, mr]
+  build_proibe: [ad, ap, crit, lethality, as_pct]
+  dicas_vantagem:
+    - "Engaje com E e Q agora"
+    - "Pressione o nível 2 primeiro"
+    - "Coloque sentinela e ande pelo mapa"
+  dicas_desvantagem:
+    - "Proteja o ADC, não engaje"
+    - "Espere o jungle pra engajar"
+    - "Guarde W pra aguentar a troca"
+
+Gragas:
+  rota: MIDDLE                 # também joga top e selva; a rota real vem do jogo
+  draft: false                 # usuário não se dá bem com ele (5/12/7 em 2026-11-06): fora das sugestões do draft
+  estilo: mago_lutador
+  alvo: carregadores_frageis
+  niveis_fortes: [3, 6]
+  allin_nivel: 6
+  itens_spike: 1
+  peso_dano: 0.7
+  peso_defesa: 0.5             # mais defesa que um mago comum: ele entra na luta com a barrigada
+  build_exige: [ap]
+  build_proibe: [ad, crit, as_pct, lethality, lifesteal]
+  dicas_vantagem:
+    - "Avance com seu E, a barrigada que atordoa"
+    - "Cutuque com seu Q, o barril, e recue"
+    - "Seu R empurra: jogue o alvo pro seu time"
+  dicas_desvantagem:
+    - "Tome seu W, a bebida que reduz dano"
+    - "Guarde seu E, a barrigada, pra fugir"
+    - "Farme com seu Q, o barril, de longe"
+
+Malzahar:
+  rota: MIDDLE                 # plano B quando banem o Zed
+  estilo: mago_controle
+  alvo: carregadores_frageis
+  niveis_fortes: [3, 6]
+  allin_nivel: 6
+  itens_spike: 1
+  peso_dano: 0.8
+  peso_defesa: 0.35
+  build_exige: [ap]
+  build_proibe: [ad, crit, as_pct, lethality, lifesteal]
+  dicas_vantagem:
+    - "Use seu R, a supressão, no alvo mais frágil"
+    - "Seu E, a maldição, mata tropas: empurre a wave"
+    - "Empurre e ajude o jungler no rio"
+  dicas_desvantagem:
+    - "Farme com seu E, a maldição, de longe"
+    - "Guarde seu Q, os portais que silenciam, pra fugir"
+    - "Não tome dano à toa: sua passiva é um escudo"
+
+# Modo genérico pra campeões fora da pool
+_generico:
+  rota: auto
+  estilo: generico
+  alvo: generico
+  niveis_fortes: [6]
+  allin_nivel: 6
+  itens_spike: 1
+  peso_dano: 0.8
+  peso_defesa: 0.3
+  dicas_vantagem:
+    - "Você está à frente, pressione"
+  dicas_desvantagem:
+    - "Farme e espere seu item"
